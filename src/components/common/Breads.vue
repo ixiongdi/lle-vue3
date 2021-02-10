@@ -14,7 +14,7 @@ export default {
                 ids: []
             },
             page: {
-                size: 10,
+                size: 50,
                 total: undefined,
                 current: 1,
                 records: []
@@ -33,6 +33,7 @@ export default {
             this.list();
         },
         onRead(e) {
+            console.log(e)
             this.form.id = e.id
             this.get();
             this.readDialogVisible = true
@@ -72,6 +73,9 @@ export default {
         },
         onSelectionChange(selection) {
             this.form.ids = selection.map(e => e.id)
+        },
+        resetQueryForm() {
+            this.query = {}
         },
         async get() {
             await axios.post(`/api/${this.package}/${this.class}/get`, {

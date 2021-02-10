@@ -1,15 +1,16 @@
 <template>
     <div>
-        <el-form :inline="true" :model="query" size="mini">
-            <el-form-item label="菜单名称">
-                <el-input v-model="query.name" placeholder="菜单名称"></el-input>
+        <el-form class="breads-query" :inline="true" :model="query" size="mini">
+            <el-form-item label="菜单名称：">
+                <el-input v-model="query.name" placeholder="菜单名称" clearable></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSearch">查询</el-button>
+                <el-button @click="resetQueryForm">重置</el-button>
             </el-form-item>
         </el-form>
 
-        <div>
+        <div class="breads-toolbar">
             <el-button size="mini" type="primary" icon="el-icon-plus" @click="onAdd">添加</el-button>
             <el-button size="mini" type="primary" icon="el-icon-delete" @click="onDelete">删除</el-button>
         </div>
@@ -18,9 +19,9 @@
                 border
                 size="mini"
                 :data="page.records"
-                @dblclick="onRead"
+                @row-dblclick="onRead"
                 @selection-change="onSelectionChange"
-                height="300">
+                max-height="768">
             <el-table-column
                     type="selection">
             </el-table-column>
@@ -29,7 +30,7 @@
                     label="序号">
             </el-table-column>
             <el-table-column prop="id" label="ID" width="100">
-                <template slot-scope="scope">
+                <template #default="scope">
                     {{ scope.row.id }}
                 </template>
             </el-table-column>
@@ -41,7 +42,7 @@
             <el-table-column prop="orderNum" label="序号" width="100"></el-table-column>
             <el-table-column prop="perms" label="权限" width="100"></el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="150">
-                <template slot-scope="scope">
+                <template #default="scope">
                     {{ scope.row.createTime }}
                 </template>
             </el-table-column>
@@ -49,8 +50,8 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="100">
-                <template slot-scope="scope">
+                    min-width="100">
+                <template #default="scope">
                     <el-row>
                         <el-button type="text" size="mini" @click="onEdit(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="onDelete(scope.row)">删除</el-button>
@@ -65,62 +66,96 @@
                 @current-change="onCurrentChange"
                 :current-page="page.current"
                 :page-sizes="[10, 20, 50, 100]"
-                :page-size="20"
+                :page-size="page.size"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="page.total">
         </el-pagination>
 
-        <el-dialog title="修改" :visible.sync="editDialogVisible">
+        <el-dialog :title="form.id ? '修改' : '新增'" v-model="editDialogVisible">
             <el-form :model="form" size="mini" label-width="100px">
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="parentId">
+                        <el-form-item label="父ID">
                             <el-input v-model="form.parentId" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="name">
+                        <el-form-item label="名称">
                             <el-input v-model="form.name" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="url">
+                        <el-form-item label="地址">
                             <el-input v-model="form.url" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="type">
+                        <el-form-item label="类型">
                             <el-input v-model="form.type" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="icon">
+                        <el-form-item label="图标">
                             <el-input v-model="form.icon" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="orderNum">
+                        <el-form-item label="序号">
                             <el-input v-model="form.orderNum" placeholder="请输入内容"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="perms">
-                            <el-input v-model="form.perms" placeholder="请输入内容"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="editDialogVisible = false">取 消</el-button>
-                <el-button type="primary" native-type="submit" @click="onSubmit">确 定</el-button>
-            </div>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="editDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="onSubmit">确 定</el-button>
+                </span>
+            </template>
+        </el-dialog>
+
+        <el-dialog title="查看" v-model="readDialogVisible">
+            <el-form :model="form" size="mini" label-width="100px">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="父ID">
+                            {{ form.parentId }}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="名称">
+                            {{ form.name }}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="地址">
+                            {{ form.url }}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="类型">
+                            {{ form.type }}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="图标">
+                            {{ form.icon }}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="序号">
+                            {{ form.orderNum }}
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
         </el-dialog>
     </div>
 
 </template>
 
 <script>
-import Breads from '../common/Breads'
+import Breads from '../../components/common/Breads'
 
 export default {
     name: "SysMenu",
@@ -147,3 +182,15 @@ export default {
     methods: {}
 }
 </script>
+
+<style lang="scss">
+.breads-query {
+  .el-form-item {
+    width: 25%;
+  }
+}
+
+.breads-toolbar {
+  height: 40px;
+}
+</style>

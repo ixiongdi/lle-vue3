@@ -5,13 +5,13 @@
         </div>
         <el-menu>
             <el-submenu v-for="level1 in menus" :index="level1.id.toString()" :key="level1.id">
-                <template slot="title">
+                <template #title>
                     <i :class="level1.icon"></i>
                     <span>{{ level1.name }}</span>
                 </template>
                 <el-menu-item v-for="level2 in level1.children" :index="level2.id.toString()" :key="level2.id"
                               @click="onClick(level2)">
-                    <template slot="title">
+                    <template #title>
                         <i :class="level2.icon"></i>
                         <span>{{ level2.name }}</span>
                     </template>
@@ -26,14 +26,23 @@ import axios from "axios";
 
 export default {
     name: "LayoutAside",
-    computed: {
-        menus: function () {
-            return this.$store.state.menus;
+    data() {
+        return {
+            menus: []
         }
     },
+    // computed: {
+    //     menus: function () {
+    //         return this.$store.state.menus;
+    //     }
+    // },
     created() {
-        axios.get('/api/sys/sys_menu/tree', {}).then(response => {
-            this.$store.commit('setMenus', response.data.data)
+        axios.get('/api/sys/sys_menu/tree', {}).then(res => {
+            // this.$store.commit('setMenus', response.data.data)
+
+            const {code, data, message} = res.data
+
+            this.menus = data;
         })
 
         // const router = this.menus.flat().map(e => {
@@ -53,7 +62,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .layout-aside {
   .header {
     display: flex;

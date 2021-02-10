@@ -1,30 +1,36 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+    <div id="app">
+        <el-container>
+            <el-aside>
+                <LayoutAside></LayoutAside>
+            </el-aside>
+            <el-container>
+                <el-header>
+                    <LayoutHeader></LayoutHeader>
+                </el-header>
+                <el-main>
+                    <router-view></router-view>
+                </el-main>
+                <el-footer>
+                    2020 - 2030 MyFramework.com copyright.
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import LayoutAside from "@/components/layout/LayoutAside";
+import LayoutHeader from "@/components/layout/LayoutHeader";
+
+export default {
+    name: 'app',
+    components: {LayoutHeader, LayoutAside},
 }
+</script>
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+<style>
+body {
+    margin: 0;
 }
 </style>

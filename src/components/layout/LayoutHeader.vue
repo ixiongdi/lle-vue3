@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .layout-header {
   display: flex;
   //justify-content: center;
