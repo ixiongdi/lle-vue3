@@ -2,7 +2,7 @@
     <div>
         <el-form :inline="true" :model="query" size="mini">
             <el-form-item label="用户名">
-                <el-input v-model="query.username" placeholder="菜单名称"></el-input>
+                <el-input v-model="query.usernameLike" placeholder="菜单名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSearch">查询</el-button>

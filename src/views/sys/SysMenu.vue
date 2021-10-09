@@ -2,7 +2,7 @@
     <div>
         <el-form class="breads-query" :inline="true" :model="query" size="mini">
             <el-form-item label="菜单名称：">
-                <el-input v-model="query.name" placeholder="菜单名称" clearable></el-input>
+                <el-input v-model="query.nameLike" placeholder="菜单名称" clearable></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSearch">查询</el-button>
@@ -50,9 +50,10 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    min-width="100">
+                    min-width="200">
                 <template #default="scope">
                     <el-row>
+                        <el-button type="text" size="mini" @click="onRead(scope.row)">查看</el-button>
                         <el-button type="text" size="mini" @click="onEdit(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="onDelete(scope.row)">删除</el-button>
                     </el-row>

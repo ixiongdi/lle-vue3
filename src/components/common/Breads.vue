@@ -14,7 +14,7 @@ export default {
                 ids: []
             },
             page: {
-                size: 50,
+                size: 10,
                 total: undefined,
                 current: 1,
                 records: []
@@ -33,7 +33,6 @@ export default {
             this.list();
         },
         onRead(e) {
-            console.log(e)
             this.form.id = e.id
             this.get();
             this.readDialogVisible = true
