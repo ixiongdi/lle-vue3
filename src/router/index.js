@@ -18,6 +18,11 @@ const routes = [
         component: () => import('../views/sys/SysUser')
     },
     {
+        path: '/sys/role',
+        name: '',
+        component: () => import('../views/sys/SysRole')
+    },
+    {
         path: '/about',
         name: 'About',
         // route level code-splitting

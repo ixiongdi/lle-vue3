@@ -87,7 +87,11 @@ export default {
         async list() {
             await axios.post(`/api/${this.package}/${this.class}/list`, {
                 ...this.query,
-                ...this.page
+            }, {
+                params: {
+                    current: this.page.current,
+                    size: this.page.size
+                }
             }).then((res) => {
                 const {code, data, message} = res.data
                 this.page = data;
